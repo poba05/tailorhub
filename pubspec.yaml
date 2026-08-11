@@ -230,12 +230,11 @@ flutter_native_splash:
     color: "#111111"
     # color_dark: "#042a49"
 
-    # Android 12+ only supports a centered icon for the splash image,
-    # not a full-screen background image. If you want the image to fill
-    # the whole screen, keep the base `background_image` and remove the
-    # `android_12.image` setting.
-    # image: lib/assets/images/splash.png
-    # image_dark: assets/images/logo/logo-splash2.png
+    # Android 12+ only supports a centered icon for the splash image.
+    # Use the same splash asset here if you want the native splash to show
+    # your custom art instead of the default icon.
+    image: lib/assets/images/splash.png
+    # image_dark: lib/assets/images/splash.png
 
     # icon background color
     icon_background_color: "#111111"
