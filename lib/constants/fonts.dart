@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tailorhub/constants/colors.dart';
 
 class AppFonts {
   static TextStyle hero({required Color color}) => TextStyle(
@@ -38,7 +37,7 @@ class AppFonts {
   static TextStyle label({required Color color}) => TextStyle(
     fontFamily: "DMSANS",
     fontSize: 12,
-    fontVariations: const [FontVariation('wght', 500)],
+    fontVariations: const [FontVariation('wght', 700)],
     letterSpacing: 2.2,
     height: 1.0,
     color: color,

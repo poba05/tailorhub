@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tailorhub/assets/models/onboarding.dart';
+import 'package:tailorhub/models/onboarding.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
+import 'package:tailorhub/screens/auth/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -41,7 +42,32 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       setState(() {
         currentpage += 1;
       });
-    } else {}
+    } else {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return const LoginScreen();
+          },
+          transitionsBuilder: (context, animation, secondaryAnimtion, child) {
+            final slide =
+                Tween<Offset>(
+                  begin: const Offset(0, 0.08),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                );
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(position: slide, child: child),
+            );
+          },
+        ),
+      );
+    }
   }
 
   @override
@@ -226,7 +252,42 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           top: 6,
                           right: 15,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                        return const LoginScreen();
+                                      },
+                                  transitionsBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimtion,
+                                        child,
+                                      ) {
+                                        final slide =
+                                            Tween<Offset>(
+                                              begin: const Offset(0, 0.08),
+                                              end: Offset.zero,
+                                            ).animate(
+                                              CurvedAnimation(
+                                                parent: animation,
+                                                curve: Curves.easeOutCubic,
+                                              ),
+                                            );
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: SlideTransition(
+                                            position: slide,
+                                            child: child,
+                                          ),
+                                        );
+                                      },
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColor.background.withValues(
                                 alpha: .6,
