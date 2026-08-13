@@ -143,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: 10),
                   //                          END OF TEXTFIELDS
                   Text(
-                    "By continuing you agree to the TailorHub Terms of Service andacknowledge our Privacy Policy.",
+                    "By continuing you agree to the TailorHub Terms of Service and acknowledge our Privacy Policy.",
                     style: AppFonts.body(color: AppColor.grey),
                   ),
                   SizedBox(height: 20),
