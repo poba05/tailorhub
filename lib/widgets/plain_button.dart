@@ -14,6 +14,10 @@ class PlainButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColor.grey.withValues(alpha: .2),
+          foregroundColor: null,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -21,7 +25,7 @@ class PlainButton extends StatelessWidget {
           ),
           minimumSize: Size.zero,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
+        ).copyWith(overlayColor: MaterialStateProperty.all(Colors.transparent)),
         child: child,
       ),
     );
