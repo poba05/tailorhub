@@ -4,7 +4,13 @@ import 'package:tailorhub/constants/colors.dart';
 class CustomButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
-  const CustomButton({super.key, required this.child, required this.onPressed});
+  final bool isloading;
+  const CustomButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.isloading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,7 @@ class CustomButton extends StatelessWidget {
         ],
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isloading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -36,7 +42,13 @@ class CustomButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: child,
+        child: isloading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : child,
       ),
     );
   }

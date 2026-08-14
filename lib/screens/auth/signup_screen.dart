@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/screens/auth/login_screen.dart';
+import 'package:tailorhub/services/auth_service.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custom_textfield.dart';
 import 'package:tailorhub/widgets/custombg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,8 +16,24 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final fullNameController = TextEditingController();
+  final businessNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    businessNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isLoading = false;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Custombg(
@@ -81,6 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         CustomTextfield(
                           prefix: Icons.person_outline,
                           hintText: "john doe",
+                          controller: fullNameController,
                         ),
                       ],
                     ),
@@ -99,6 +117,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         CustomTextfield(
                           prefix: Icons.house_outlined,
                           hintText: "cathyTextiles",
+                          controller: businessNameController,
                         ),
                       ],
                     ),
@@ -117,6 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         CustomTextfield(
                           prefix: Icons.mail_outline,
                           hintText: "you@business.com",
+                          controller: emailController,
                         ),
                       ],
                     ),
@@ -136,6 +156,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           prefix: Icons.key_outlined,
                           hintText: "*************",
                           isPassword: true,
+                          controller: passwordController,
                         ),
                       ],
                     ),
@@ -148,7 +169,90 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: 20),
                   CustomButton(
-                    onPressed: () {},
+                    isloading: isLoading,
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      try {
+                        final response = await AuthService().signUp(
+                          fullname: fullNameController.text.trim(),
+                          businessname: businessNameController.text.trim(),
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+
+                        if (!mounted) return;
+
+                        if (response.user != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Account created Successfully'),
+                            ),
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: const Duration(
+                                milliseconds: 500,
+                              ),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                    return const LoginScreen();
+                                  },
+                              transitionsBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    final scale =
+                                        Tween<double>(
+                                          begin: 0.96,
+                                          end: 1.0,
+                                        ).animate(
+                                          CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                        );
+
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: ScaleTransition(
+                                        scale: scale,
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                            ),
+                          );
+                        }
+                      } on AuthException catch (e) {
+                        if (!mounted) return;
+
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.message)));
+                      } catch (e) {
+                        if (!mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Something went wrong. Please Try again",
+                            ),
+                          ),
+                        );
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
+                    },
                     child: Text(
                       "Signup",
                       style: AppFonts.buttonText(color: AppColor.background),

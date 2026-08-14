@@ -6,11 +6,13 @@ class CustomTextfield extends StatefulWidget {
   final String hintText;
   final IconData prefix;
   final bool isPassword;
+  final TextEditingController? controller;
   const CustomTextfield({
     super.key,
     required this.hintText,
     required this.prefix,
     this.isPassword = false,
+    this.controller,
   });
 
   @override
@@ -29,6 +31,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         border: Border.all(width: 1, color: AppColor.grey),
       ),
       child: TextField(
+        controller: widget.controller,
         style: AppFonts.body(color: AppColor.text),
         decoration: InputDecoration(
           border: InputBorder.none,

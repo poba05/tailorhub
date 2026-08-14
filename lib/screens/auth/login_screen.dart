@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/screens/auth/forgot_password.dart';
 import 'package:tailorhub/screens/auth/signup_screen.dart';
+import 'package:tailorhub/screens/main/dashboard.dart';
+import 'package:tailorhub/services/auth_service.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custom_textfield.dart';
 import 'package:tailorhub/widgets/custombg.dart';
@@ -17,9 +20,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
+
   bool ischecked = false;
   @override
   Widget build(BuildContext context) {
+    bool isLoading = false;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Custombg(
@@ -72,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomTextfield(
                           hintText: "you@gmail.com",
                           prefix: Icons.mail_outline,
+                          controller: emailController,
                         ),
                       ],
                     ),
@@ -91,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "**************",
                           prefix: Icons.key,
                           isPassword: true,
+                          controller: passwordController,
                         ),
                       ],
                     ),
@@ -168,7 +185,73 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   //                      LOGIN BUTTON
                   CustomButton(
-                    onPressed: () {},
+                    isloading: isLoading,
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      try {
+                        final response = await AuthService().login(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+
+                        if (!mounted) return;
+
+                        if (response.user != null) {
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: const Duration(
+                                milliseconds: 500,
+                              ),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                    return const Dashboard();
+                                  },
+                              transitionsBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    final scale =
+                                        Tween<double>(
+                                          begin: 0.96,
+                                          end: 1.0,
+                                        ).animate(
+                                          CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                        );
+
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: ScaleTransition(
+                                        scale: scale,
+                                        child: child,
+                                      ),
+                                    );
+                                  },
+                            ),
+                          );
+                        }
+                      } on AuthException catch (e) {
+                        if (!mounted) return;
+
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.message)));
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
+                    },
                     child: Text(
                       "Sign in",
                       style: AppFonts.buttonText(color: AppColor.background),
