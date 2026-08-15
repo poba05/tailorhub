@@ -75,7 +75,7 @@ class _DashboardState extends State<Dashboard> {
                             color: AppColor.grey.withValues(alpha: .4),
                           ),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: 10),
                         Text(
                           "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
                           style: AppFonts.heading(color: AppColor.text),
@@ -121,8 +121,8 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         child: Container(
-                          height: 40,
-                          width: 40,
+                          height: 30,
+                          width: 30,
                           decoration: BoxDecoration(
                             color: AppColor.first,
                             borderRadius: BorderRadius.circular(11),
@@ -209,6 +209,56 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.transparent),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Today's Work",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontFamily: 'CormorantGaramond',
+                              fontVariations: [FontVariation('wght', 500)],
+                              color: AppColor.text,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "All orders",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'DMSANS',
+                                    fontVariations: [
+                                      FontVariation('wght', 600),
+                                    ],
+                                    color: AppColor.primary,
+                                  ),
+                                ),
+                                SizedBox(width: 3),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 10,
+                                  color: AppColor.primary,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                    ],
                   ),
                 ),
               ],
