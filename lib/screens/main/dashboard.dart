@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
+import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/models/profile.dart';
 import 'package:tailorhub/services/profile_service.dart';
 import 'package:tailorhub/utils/name_utils.dart';
 import 'package:tailorhub/widgets/custombg.dart';
 import 'package:intl/intl.dart';
+import 'package:tailorhub/widgets/order_container.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -258,6 +260,16 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                       SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(
+                          orderList.length,
+                          (index) => Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: OrderContainer(order: orderList[index]),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

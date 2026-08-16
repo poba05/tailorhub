@@ -14,14 +14,14 @@ class Onboarding {
 
 List<Onboarding> onboarding = [
   Onboarding(
-    image: "lib/assets/images/hero_image2.png",
+    image: "lib/assets/images/hero_image1.png",
     header: "Client book",
     title: "Every client,\nperfectly kept.",
     description:
         "Names, numbers, notes and visit history —\norganised the way a master tailor thinks.",
   ),
   Onboarding(
-    image: "lib/assets/images/hero_image1.jpg",
+    image: "lib/assets/images/hero_image2.png",
     header: "Measurements",
     title: "Measure once,\nreuse forever.",
     description:
