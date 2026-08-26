@@ -44,6 +44,21 @@ class OrderContainer extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColor.background,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          width: 1,
+          color: AppColor.grey.withValues(alpha: .5),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.grey.withValues(alpha: .5),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,20 +66,22 @@ class OrderContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 30,
-                width: 30,
+                height: 40,
+                width: 40,
                 decoration: BoxDecoration(
                   color: AppColor.first,
                   borderRadius: BorderRadius.circular(11),
                   border: Border.all(color: AppColor.first, width: 1),
                 ),
-                child: Text(
-                  getInitials(order.clientName),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: "DMSANS",
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: AppColor.background,
+                child: Center(
+                  child: Text(
+                    getInitials(order.clientName),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "DMSANS",
+                      fontVariations: [FontVariation('wght', 700)],
+                      color: AppColor.background,
+                    ),
                   ),
                 ),
               ),
@@ -92,8 +109,8 @@ class OrderContainer extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: "DMSANS",
-                      fontVariations: [FontVariation('wght', 400)],
-                      color: AppColor.text,
+                      fontVariations: [FontVariation('wght', 500)],
+                      color: AppColor.grey,
                     ),
                   ),
                 ],
@@ -109,10 +126,12 @@ class OrderContainer extends StatelessWidget {
           SizedBox(height: 20),
           Row(
             children: [
-              LinearProgressIndicator(
-                value: order.percentComplete / 100,
-                backgroundColor: AppColor.grey,
-                color: AppColor.first,
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: order.percentComplete / 100,
+                  backgroundColor: AppColor.grey,
+                  color: AppColor.first,
+                ),
               ),
               SizedBox(width: 5),
               Text(
@@ -138,7 +157,7 @@ class OrderContainer extends StatelessWidget {
                     badgeColor = AppColor.success;
                   } else if (status == 'sewing') {
                     badgeColor = AppColor.error;
-                  } else if (status == 'Cutting') {
+                  } else if (status == 'cutting') {
                     badgeColor = AppColor.warning;
                   } else {
                     badgeColor = AppColor.grey;

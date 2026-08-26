@@ -6,6 +6,7 @@ class CustomTextfield extends StatefulWidget {
   final String hintText;
   final IconData prefix;
   final bool isPassword;
+  final void Function(String)? onchanged;
   final TextEditingController? controller;
   const CustomTextfield({
     super.key,
@@ -13,6 +14,7 @@ class CustomTextfield extends StatefulWidget {
     required this.prefix,
     this.isPassword = false,
     this.controller,
+    this.onchanged,
   });
 
   @override
@@ -32,6 +34,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       ),
       child: TextField(
         controller: widget.controller,
+        onChanged: (value) => widget.onchanged?.call(value),
         style: AppFonts.body(color: AppColor.text),
         decoration: InputDecoration(
           border: InputBorder.none,

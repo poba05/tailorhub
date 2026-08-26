@@ -38,6 +38,8 @@ dependencies:
   supabase_flutter: ^2.17.1
   flutter_dotenv: ^6.0.1
   intl: ^0.20.3
+  dotted_line: 
+  dotted_border: 
 
 dev_dependencies:
   flutter_test:

@@ -9,6 +9,7 @@ class Custombg extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(color: AppColor.background),
       child: Stack(
         children: [

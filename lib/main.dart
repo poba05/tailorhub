@@ -7,7 +7,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: '.env');
-
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     publishableKey: dotenv.env['SUPABASE_PUBLISHABLE_KEY'],
@@ -22,8 +21,6 @@ class Tailorhub extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
-    debugPrint('Current session: ${supabase.auth.currentSession}');
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
