@@ -49,15 +49,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      height: 40,
-                      width: 40,
+                      height: 44,
+                      width: 44,
                       decoration: BoxDecoration(
-                        color: AppColor.background,
+                        color: Colors.white,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColor.grey.withValues(alpha: .3),
+                          color: AppColor.grey.withValues(alpha: .18),
                           width: 1,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.first.withValues(alpha: 0.06),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
                       child: Center(
                         child: Icon(
@@ -68,22 +75,22 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Create Account".toUpperCase(),
                     style: AppFonts.label(color: AppColor.secondary),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Open your Workbook",
                     style: AppFonts.heading(color: AppColor.text),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Set up your studio in under a minute. Your\nfirst 20 clients are always free.",
                     style: AppFonts.body(color: AppColor.grey),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   //                                              TEXTFIELDS
                   Container(
                     decoration: BoxDecoration(color: Colors.transparent),

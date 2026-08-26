@@ -28,9 +28,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 children: [
                   IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColor.background,
-                      shape: CircleBorder(),
-                      side: BorderSide(width: 1, color: AppColor.background),
+                      backgroundColor: Colors.white,
+                      shape: const CircleBorder(),
+                      side: BorderSide(
+                        width: 1,
+                        color: AppColor.grey.withValues(alpha: 0.18),
+                      ),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -41,22 +44,22 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       color: AppColor.text,
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Text(
                     "Recovery".toUpperCase(),
                     style: AppFonts.label(color: AppColor.secondary),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
-                    "Lost the Thead?",
+                    "Lost the Thread?",
                     style: AppFonts.heading(color: AppColor.text),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Enter the email tied to your studio and we'll\nsend a secure reset link.",
                     style: AppFonts.body(color: AppColor.grey),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(color: Colors.transparent),
                     child: Column(

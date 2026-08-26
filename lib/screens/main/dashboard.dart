@@ -393,38 +393,48 @@ class _DashboardState extends State<Dashboard> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              todayDate,
-              style: AppFonts.label(color: AppColor.grey.withValues(alpha: .4)),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
-              style: AppFonts.heading(color: AppColor.text),
-            ),
-            SizedBox(height: 5),
-            Text(
-              "what are we sketching today?",
-              style: AppFonts.body(color: AppColor.grey),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                todayDate,
+                style: AppFonts.label(
+                  color: AppColor.grey.withValues(alpha: .5),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
+                style: AppFonts.heading(color: AppColor.text),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "what are we sketching today?",
+                style: AppFonts.body(color: AppColor.grey),
+              ),
+            ],
+          ),
         ),
-        Spacer(),
         GestureDetector(
           onTap: () {},
           child: Container(
-            height: 40,
-            width: 40,
+            height: 42,
+            width: 42,
             decoration: BoxDecoration(
-              color: AppColor.background,
+              color: Colors.white,
               shape: BoxShape.circle,
               border: Border.all(
                 width: 1,
-                color: AppColor.grey.withValues(alpha: .3),
+                color: AppColor.grey.withValues(alpha: .2),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.first.withValues(alpha: 0.08),
+                  blurRadius: 15,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
             child: Icon(
               Icons.notifications_outlined,
@@ -433,28 +443,24 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         GestureDetector(
           onTap: () {},
           child: Container(
-            padding: EdgeInsets.all(3),
+            padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 width: 2,
-                color: AppColor.primary.withValues(alpha: .4),
+                color: AppColor.primary.withValues(alpha: .28),
               ),
             ),
             child: Container(
-              height: 30,
-              width: 30,
+              height: 32,
+              width: 32,
               decoration: BoxDecoration(
-                color: AppColor.first,
-                borderRadius: BorderRadius.circular(11),
-                border: Border.all(
-                  width: 2,
-                  color: AppColor.first.withValues(alpha: .6),
-                ),
+                gradient: AppGradient.primaryGradient,
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
                 child: Text(

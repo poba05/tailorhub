@@ -73,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.tertiary,
+      backgroundColor: const Color(0xFFF3EEFF),
       body: SafeArea(
         child: Column(
           children: [
@@ -105,22 +105,47 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                 ),
                                 child: ScaleTransition(
                                   scale: _pulseAnimation,
-                                  child: Image.asset(
-                                    page.image,
-                                    fit: BoxFit.cover,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(32),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white.withValues(alpha: 0.9),
+                                          AppColor.primary.withValues(
+                                            alpha: 0.06,
+                                          ),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppColor.primary.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                          blurRadius: 20,
+                                          offset: const Offset(0, 12),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Image.asset(
+                                      page.image,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 60),
+                            const SizedBox(height: 40),
                             Container(
                               height: 300,
                               width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: AppColor.background,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(28),
+                                  topRight: Radius.circular(28),
                                 ),
                               ),
                               child: Padding(
@@ -180,7 +205,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                                 decoration: BoxDecoration(
                                                   color: isActive
                                                       ? AppColor.primary
-                                                      : AppColor.grey,
+                                                      : AppColor.grey
+                                                            .withValues(
+                                                              alpha: 0.32,
+                                                            ),
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
@@ -189,7 +217,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                           ),
                                         ),
                                         Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 20,
                                             vertical: 2,
                                           ),
@@ -203,10 +231,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                           child: ElevatedButton(
                                             onPressed: nextpage,
                                             style: ElevatedButton.styleFrom(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 20,
-                                                vertical: 2,
-                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 2,
+                                                  ),
                                               backgroundColor:
                                                   Colors.transparent,
                                               elevation: 0,
@@ -289,10 +318,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColor.background.withValues(
-                                alpha: .6,
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.7,
                               ),
                               elevation: 0,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
                             ),
                             child: Text(
                               "Skip",

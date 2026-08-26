@@ -26,21 +26,47 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 54,
+      height: 56,
       decoration: BoxDecoration(
-        color: AppColor.grey.withValues(alpha: .2),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(width: 1, color: AppColor.grey),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          width: 1,
+          color: AppColor.grey.withValues(alpha: 0.22),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.first.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: TextField(
         controller: widget.controller,
         onChanged: (value) => widget.onchanged?.call(value),
         style: AppFonts.body(color: AppColor.text),
         decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide(color: AppColor.first, width: 1.2),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 16,
+          ),
           prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 12.0, right: 10.0),
             child: Icon(widget.prefix, size: 20, color: AppColor.grey),
           ),
           prefixIconConstraints: const BoxConstraints(

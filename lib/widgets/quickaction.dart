@@ -11,42 +11,46 @@ Widget quickAction({
   return GestureDetector(
     onTap: onTap,
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      width: 280,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColor.background,
-        borderRadius: BorderRadius.circular(14),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColor.grey.withValues(alpha: 0.12)),
         boxShadow: [
           BoxShadow(
-            color: AppColor.grey.withValues(alpha: .13),
-            blurRadius: 15,
-            offset: Offset(0, 5),
+            color: AppColor.first.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 30,
-            width: 30,
+            height: 38,
+            width: 38,
             decoration: BoxDecoration(
-              color: AppColor.first.withValues(alpha: .15),
-              borderRadius: BorderRadius.circular(10),
+              gradient: AppGradient.primaryGradient,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColor.primary, size: 20),
+            child: Icon(icon, color: AppColor.background, size: 20),
           ),
-          SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: AppFonts.label(color: AppColor.text)),
-              SizedBox(height: 3),
-              Text(
-                description,
-                style: AppFonts.body(color: AppColor.grey),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppFonts.label(color: AppColor.text)),
+                const SizedBox(height: 2),
+                Text(
+                  description,
+                  style: AppFonts.body(color: AppColor.grey),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
           ),
         ],
       ),

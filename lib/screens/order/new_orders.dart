@@ -40,19 +40,26 @@ class _NewOrdersState extends State<NewOrders> {
             right: 0,
             left: 0,
             child: Container(
-              padding: EdgeInsets.fromLTRB(12, 10, 12, 12),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               decoration: BoxDecoration(
-                color: AppColor.background,
+                color: Colors.white,
                 border: Border(
                   bottom: BorderSide(
-                    color: AppColor.grey.withValues(alpha: .3),
+                    color: AppColor.grey.withValues(alpha: .18),
                   ),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.first.withValues(alpha: 0.05),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -67,12 +74,13 @@ class _NewOrdersState extends State<NewOrders> {
                           }
                         },
                         child: Container(
-                          height: 30,
-                          width: 30,
+                          height: 36,
+                          width: 36,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
+                            color: Colors.white,
                             border: Border.all(
-                              color: AppColor.grey.withValues(alpha: .4),
+                              color: AppColor.grey.withValues(alpha: .25),
                             ),
                           ),
                           child: Icon(
@@ -82,7 +90,7 @@ class _NewOrdersState extends State<NewOrders> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -90,30 +98,30 @@ class _NewOrdersState extends State<NewOrders> {
                             "New Order",
                             style: AppFonts.label(color: AppColor.text),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             "Step $currentStep of $totalSteps",
                             style: AppFonts.body(color: AppColor.grey),
                           ),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Container(
-                        height: 30,
-                        width: 30,
+                        height: 36,
+                        width: 36,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColor.first.withValues(alpha: .3),
+                          gradient: AppGradient.primaryGradient,
                         ),
                         child: Icon(
                           Icons.cut,
                           size: 20,
-                          color: AppColor.primary,
+                          color: AppColor.background,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   StepProgressIndicator(
                     currentStep: currentStep,
                     totalSteps: totalSteps,
@@ -127,12 +135,19 @@ class _NewOrdersState extends State<NewOrders> {
             right: 0,
             left: 0,
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColor.background,
+                color: Colors.white,
                 border: Border(
-                  top: BorderSide(color: AppColor.grey.withValues(alpha: .3)),
+                  top: BorderSide(color: AppColor.grey.withValues(alpha: .18)),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.first.withValues(alpha: 0.05),
+                    blurRadius: 16,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -156,7 +171,7 @@ class _NewOrdersState extends State<NewOrders> {
                             ),
                           ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 6),
                   Text(
                     "Select or add a client to continue",
                     style: AppFonts.body(color: AppColor.grey),

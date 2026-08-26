@@ -333,18 +333,18 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget buildHeader() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(12, 10, 12, 12),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
       decoration: BoxDecoration(
-        color: AppColor.background,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColor.grey.withValues(alpha: .08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColor.first.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -352,7 +352,7 @@ class _OrderScreenState extends State<OrderScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Orders", style: AppFonts.heading(color: AppColor.text)),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           RichText(
             text: TextSpan(
               children: [
@@ -372,7 +372,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           CustomTextfield(
             hintText: "Search orders & references",
             prefix: Icons.search,
@@ -382,8 +382,7 @@ class _OrderScreenState extends State<OrderScreen> {
               setState(() {});
             },
           ),
-          SizedBox(height: 10),
-
+          const SizedBox(height: 12),
           buildFilters(),
         ],
       ),
@@ -398,7 +397,7 @@ class _OrderScreenState extends State<OrderScreen> {
           final isSelected = selectedFilter == filter;
 
           return Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -407,13 +406,25 @@ class _OrderScreenState extends State<OrderScreen> {
                 applyFilter();
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColor.first : AppColor.background,
-                  borderRadius: BorderRadius.circular(20),
+                  color: isSelected ? AppColor.first : Colors.white,
+                  borderRadius: BorderRadius.circular(18),
                   border: Border.all(
-                    color: AppColor.grey.withValues(alpha: .3),
+                    color: AppColor.grey.withValues(alpha: .2),
                   ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: AppColor.first.withValues(alpha: 0.18),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Text(
                   filter,

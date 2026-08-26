@@ -20,20 +20,46 @@ class EmptyState extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColor.grey.withValues(alpha: .3)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppColor.grey.withValues(alpha: 0.15)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.first.withValues(alpha: 0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.hourglass_empty, size: 40, color: AppColor.primary),
+          Container(
+            height: 74,
+            width: 74,
+            decoration: BoxDecoration(
+              gradient: AppGradient.primaryGradient,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.primary.withValues(alpha: 0.18),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.hourglass_empty,
+              size: 34,
+              color: AppColor.background,
+            ),
+          ),
 
-          const SizedBox(height: 15),
+          const SizedBox(height: 18),
 
           Text(title, style: AppFonts.heading(color: AppColor.text)),
 
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
 
           Text(
             subTitle,
@@ -41,14 +67,14 @@ class EmptyState extends StatelessWidget {
             style: AppFonts.body(color: AppColor.grey),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(18),
               ),
               backgroundColor: AppColor.primary,
             ),

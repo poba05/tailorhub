@@ -47,31 +47,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 60),
                   Container(
-                    height: 50,
-                    width: 50,
+                    height: 62,
+                    width: 62,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("lib/assets/images/hero_icon.png"),
+                      gradient: AppGradient.primaryGradient,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.first.withValues(alpha: 0.15),
+                          blurRadius: 18,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        "lib/assets/images/hero_icon.png",
                         fit: BoxFit.cover,
+                        height: 30,
+                        width: 30,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     "WELCOME BACK",
                     style: AppFonts.label(color: AppColor.secondary),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Step into the atelier",
                     style: AppFonts.heading(color: AppColor.neutral),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Your client book, measurements and orders\nare exactly where you left them.",
                     style: AppFonts.bodyLarge(color: AppColor.grey),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   //                                  TEXT FIELDS
                   Container(

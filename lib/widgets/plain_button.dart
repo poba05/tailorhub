@@ -13,15 +13,18 @@ class PlainButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColor.grey.withValues(alpha: .2),
+          backgroundColor: Colors.white,
           foregroundColor: null,
           elevation: 0,
           shadowColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(width: 1, color: AppColor.grey),
+            borderRadius: BorderRadius.circular(18),
+            side: BorderSide(
+              width: 1,
+              color: AppColor.grey.withValues(alpha: 0.18),
+            ),
           ),
           minimumSize: Size.zero,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,

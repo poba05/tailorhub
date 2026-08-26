@@ -43,19 +43,26 @@ class OrderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColor.background,
-        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            const Color(0xFFF9F5FF),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           width: 1,
-          color: AppColor.grey.withValues(alpha: .5),
+          color: AppColor.grey.withValues(alpha: 0.18),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColor.grey.withValues(alpha: .5),
-            blurRadius: 20,
-            spreadRadius: 5,
+            color: AppColor.first.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -66,12 +73,11 @@ class OrderContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 40,
-                width: 40,
+                height: 42,
+                width: 42,
                 decoration: BoxDecoration(
-                  color: AppColor.first,
-                  borderRadius: BorderRadius.circular(11),
-                  border: Border.all(color: AppColor.first, width: 1),
+                  gradient: AppGradient.primaryGradient,
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: Center(
                   child: Text(
@@ -85,37 +91,38 @@ class OrderContainer extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${order.orderId.toUpperCase()} • ${order.orderType.toUpperCase()}",
-                    style: AppFonts.label(color: AppColor.grey),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    order.orderName,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: "DMSANS",
-                      fontVariations: [FontVariation('wght', 600)],
-                      color: AppColor.text,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${order.orderId.toUpperCase()} • ${order.orderType.toUpperCase()}",
+                      style: AppFonts.label(color: AppColor.grey),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    order.clientName,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: "DMSANS",
-                      fontVariations: [FontVariation('wght', 500)],
-                      color: AppColor.grey,
+                    const SizedBox(height: 8),
+                    Text(
+                      order.orderName,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "DMSANS",
+                        fontVariations: [FontVariation('wght', 600)],
+                        color: AppColor.text,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Text(
+                      order.clientName,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: "DMSANS",
+                        fontVariations: [FontVariation('wght', 500)],
+                        color: AppColor.grey,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
               Icon(
                 Icons.arrow_forward_ios_outlined,
                 size: 15,
@@ -123,17 +130,21 @@ class OrderContainer extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 18),
           Row(
             children: [
               Expanded(
-                child: LinearProgressIndicator(
-                  value: order.percentComplete / 100,
-                  backgroundColor: AppColor.grey,
-                  color: AppColor.first,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: order.percentComplete / 100,
+                    minHeight: 8,
+                    backgroundColor: AppColor.grey.withValues(alpha: 0.16),
+                    color: AppColor.first,
+                  ),
                 ),
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 8),
               Text(
                 "${order.percentComplete}%",
                 style: TextStyle(
@@ -145,10 +156,9 @@ class OrderContainer extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 2),
+          const SizedBox(height: 10),
           Row(
             children: [
-              // Status badge: color depends on order.status
               Builder(
                 builder: (_) {
                   final status = order.status.toLowerCase();
@@ -163,9 +173,9 @@ class OrderContainer extends StatelessWidget {
                     badgeColor = AppColor.grey;
                   }
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: badgeColor.withValues(alpha: .15),
+                      color: badgeColor.withValues(alpha: .12),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -180,12 +190,12 @@ class OrderContainer extends StatelessWidget {
                   );
                 },
               ),
-              Spacer(),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(Icons.calendar_month, size: 10, color: dateColor),
-                  SizedBox(width: 2),
+                  const SizedBox(width: 2),
                   Text(
                     remainingTimetext,
                     style: TextStyle(
@@ -197,7 +207,7 @@ class OrderContainer extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 12),
               Text(
                 "₦${order.orderPrice}",
                 style: TextStyle(
