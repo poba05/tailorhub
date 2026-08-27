@@ -1,15 +1,20 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/clients.dart';
+import 'package:tailorhub/models/garment_type.dart';
 import 'package:tailorhub/models/new_order_data.dart';
 import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/services/client_services.dart';
+import 'package:tailorhub/services/garmenttype_service.dart';
 import 'package:tailorhub/services/order_service.dart';
 import 'package:tailorhub/utils/name_utils.dart';
+import 'package:tailorhub/widgets/color_circle.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custom_textfield.dart';
+import 'package:tailorhub/widgets/delivery_date_picker.dart';
 import 'package:tailorhub/widgets/empty_state.dart';
 import 'package:tailorhub/widgets/step_progress_indicator.dart';
 
@@ -32,7 +37,13 @@ class _NewOrdersState extends State<NewOrders> {
         children: [
           Positioned.fill(
             child: SingleChildScrollView(
-              child: SafeArea(child: Column(children: [buildCurrentStep()])),
+              padding: const EdgeInsets.only(bottom: 80),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [buildCurrentStep()],
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -154,7 +165,9 @@ class _NewOrdersState extends State<NewOrders> {
                   CustomButton(
                     onPressed: () {
                       if (currentStep < 3) {
-                        currentStep++;
+                        setState(() {
+                          currentStep++;
+                        });
                       } else {}
                     },
                     child: currentStep == 3
@@ -198,10 +211,10 @@ class _NewOrdersState extends State<NewOrders> {
         );
       case 1:
         return GarmentStep(
-          selectedGarment: orderData.garmentType,
+          selectedGarment: orderData.garment,
           onGarmentSelected: (garment) {
             setState(() {
-              orderData.garmentType = garment;
+              orderData.garment = garment;
             });
           },
         );
@@ -243,7 +256,7 @@ class _NewOrdersState extends State<NewOrders> {
 
 class ClientStep extends StatefulWidget {
   final Clients? selectedClient;
-  final ValueChanged<Clients> onClientSelected;
+  final ValueChanged<Clients?> onClientSelected;
   const ClientStep({
     super.key,
     required this.selectedClient,
@@ -341,6 +354,7 @@ class _ClientStepState extends State<ClientStep> {
             style: AppFonts.body(color: AppColor.grey),
           ),
           SizedBox(height: 30),
+          buildSelectedClient(),
           CustomTextfield(
             hintText: "Search your client book",
             prefix: Icons.search,
@@ -481,7 +495,6 @@ class _ClientStepState extends State<ClientStep> {
 
   Widget buildClientCard(Clients client) {
     final isSelected = widget.selectedClient?.id == client.id;
-    final orderCount = _orderService.getClientOrderCount(client.id);
 
     return GestureDetector(
       onTap: () {
@@ -491,40 +504,38 @@ class _ClientStepState extends State<ClientStep> {
         width: double.infinity,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: AppColor.background,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? AppColor.first
                 : AppColor.grey.withValues(alpha: .5),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.grey.withValues(alpha: .2),
+              blurRadius: 10,
+              spreadRadius: 3,
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(3),
+              height: 42,
+              width: 42,
               decoration: BoxDecoration(
+                gradient: AppGradient.primaryGradient,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  width: 2,
-                  color: AppColor.primary.withValues(alpha: .4),
-                ),
               ),
-              child: Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: AppColor.primary,
-                  borderRadius: BorderRadius.circular(11),
-                  border: Border.all(
-                    width: 2,
-                    color: AppColor.first.withValues(alpha: .6),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    getInitials(client.name),
-                    style: AppFonts.bodyLarge(color: AppColor.background),
+              child: Center(
+                child: Text(
+                  getInitials(client.name),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: "DMSANS",
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: AppColor.background,
                   ),
                 ),
               ),
@@ -571,6 +582,323 @@ class _ClientStepState extends State<ClientStep> {
                 ),
                 shape: BoxShape.circle,
               ),
+              child: isSelected
+                  ? Icon(Icons.check, size: 10, color: AppColor.background)
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildSelectedClient() {
+    final client = widget.selectedClient;
+
+    if (client == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: AppGradient.primaryGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: 42,
+            width: 42,
+            decoration: BoxDecoration(
+              color: AppColor.grey.withValues(alpha: .3),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Text(
+                getInitials(client.name),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "DMSANS",
+                  fontVariations: [FontVariation('wght', 700)],
+                  color: AppColor.background,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "order for".toUpperCase(),
+                style: AppFonts.label(
+                  color: AppColor.grey.withValues(alpha: .5),
+                ),
+              ),
+              Text(
+                client.name,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: "DMSANS",
+                  fontVariations: [FontVariation('wght', 700)],
+                  color: AppColor.background,
+                ),
+              ),
+              Text(
+                '${client.phone}',
+                style: AppFonts.body(
+                  color: AppColor.grey.withValues(alpha: .5),
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                widget.onClientSelected(null);
+              });
+            },
+            child: Container(
+              height: 30,
+              width: 50,
+              decoration: BoxDecoration(
+                color: AppColor.grey.withValues(alpha: .3),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.close,
+                size: 20,
+                color: AppColor.background,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GarmentStep extends StatefulWidget {
+  final GarmentType? selectedGarment;
+  final ValueChanged<GarmentType> onGarmentSelected;
+
+  const GarmentStep({
+    super.key,
+    required this.selectedGarment,
+    required this.onGarmentSelected,
+  });
+
+  @override
+  State<GarmentStep> createState() => _GarmentStepState();
+}
+
+class _GarmentStepState extends State<GarmentStep> {
+  final GarmenttypeService _garmenttypeService = GarmenttypeService();
+
+  List<GarmentType> garmentType = [];
+
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    loadGarmentTypes();
+  }
+
+  Future<void> loadGarmentTypes() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final result = await _garmenttypeService.getGarmentType();
+
+      if (!mounted) return;
+
+      setState(() {
+        garmentType = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        errorMessage = 'Unable to load Garments';
+        isLoading = false;
+      });
+      debugPrint('Garment Error: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 105, left: 8, right: 8, bottom: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'What are we making?'.toUpperCase(),
+            style: AppFonts.label(color: AppColor.error),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Choose the garment',
+            style: AppFonts.heading(color: AppColor.text),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Starting from a template pre-fills the\nmeasurement sheet for this order.',
+            style: AppFonts.body(color: AppColor.grey),
+          ),
+          const SizedBox(height: 30),
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (errorMessage != null)
+            Center(
+              child: Text(
+                errorMessage!,
+                style: AppFonts.body(color: AppColor.grey),
+              ),
+            )
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 20),
+              itemCount: garmentType.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.2,
+              ),
+              itemBuilder: (context, index) {
+                return buildGarmentType(garmentType[index]);
+              },
+            ),
+
+          SizedBox(height: 20),
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "------------------",
+                  style: AppFonts.body(color: AppColor.grey),
+                ),
+                Flexible(
+                  child: Text(
+                    "  Order name  ",
+                    textAlign: TextAlign.center,
+                    style: AppFonts.bodyLarge(color: AppColor.grey),
+                  ),
+                ),
+                Text(
+                  "------------------",
+                  style: AppFonts.body(color: AppColor.grey),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          CustomTextfield(prefix: Icons.title, hintText: "e.g pink silk suit"),
+        ],
+      ),
+    );
+  }
+
+  Widget buildGarmentType(GarmentType garmentType) {
+    final isSelected = widget.selectedGarment?.id == garmentType.id;
+
+    return GestureDetector(
+      onTap: () {
+        widget.onGarmentSelected(garmentType);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: AppColor.plainWhite,
+          border: Border.all(
+            color: isSelected
+                ? AppColor.primary
+                : AppColor.grey.withValues(alpha: .3),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.grey.withValues(alpha: .5),
+              blurRadius: 20,
+              spreadRadius: 5,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    gradient: AppGradient.primaryGradient,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      getInitials(garmentType.name),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'DMSANS',
+                        fontVariations: [FontVariation('wght', 700)],
+                        color: AppColor.plainWhite,
+                      ),
+                    ),
+                  ),
+                ),
+                if (isSelected)
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      color: AppColor.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.check, size: 10, color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Text(
+              garmentType.name,
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'DMSANS',
+                fontVariations: [FontVariation('wght', 700)],
+                color: AppColor.text,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              garmentType.description ?? '',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'DMSANS',
+                fontVariations: [FontVariation('wght', 300)],
+                color: AppColor.grey,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -579,23 +907,7 @@ class _ClientStepState extends State<ClientStep> {
   }
 }
 
-class GarmentStep extends StatelessWidget {
-  final String? selectedGarment;
-  final ValueChanged<String> onGarmentSelected;
-  const GarmentStep({
-    super.key,
-    required this.selectedGarment,
-    required this.onGarmentSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Garment ui
-    return Column();
-  }
-}
-
-class DetailsStep extends StatelessWidget {
+class DetailsStep extends StatefulWidget {
   final DateTime? deadline;
   final bool isRush;
   final double total;
@@ -618,9 +930,194 @@ class DetailsStep extends StatelessWidget {
   });
 
   @override
+  State<DetailsStep> createState() => _DetailsStepState();
+}
+
+class _DetailsStepState extends State<DetailsStep> {
+  final fabricNameController = TextEditingController();
+  final totalAmountController = TextEditingController();
+  final balanceAmountController = TextEditingController();
+
+  Color? selectedColor;
+
+  final List<Color> colors = [
+    AppColor.error,
+    AppColor.warning,
+    AppColor.grey,
+    AppColor.text,
+    AppColor.success,
+  ];
+
+  @override
+  void dispose() {
+    super.dispose();
+    fabricNameController.dispose();
+    totalAmountController.dispose();
+    balanceAmountController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Details ui
-    return Column();
+    return Padding(
+      padding: const EdgeInsets.only(top: 105, left: 8, right: 8, bottom: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "when and how much".toUpperCase(),
+            style: AppFonts.label(color: AppColor.error),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "Schedule & payment",
+            style: AppFonts.heading(color: AppColor.text),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "Set the collection date and record what the\nclient is paying today.",
+            style: AppFonts.body(color: AppColor.grey),
+          ),
+          SizedBox(height: 30),
+          DeliveryDatePicker(
+            selectedDate: widget.deadline,
+            isRush: widget.isRush,
+            onDateSelected: widget.onDeadlineChanged,
+            onRushChanged: widget.onRushChanged,
+          ),
+          SizedBox(height: 10),
+          buildDetailFabricInfo(),
+          SizedBox(height: 10),
+          buildPaymentfee(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDetailFabricInfo() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColor.plainWhite,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColor.grey.withValues(alpha: .3)),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: AppColor.first.withValues(alpha: .1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.dry_cleaning, color: AppColor.first),
+              ),
+              SizedBox(width: 10),
+              Text("Fabric", style: AppFonts.label(color: AppColor.grey)),
+            ],
+          ),
+          SizedBox(height: 10),
+          CustomTextfield(
+            controller: fabricNameController,
+            prefix: Icons.title,
+            hintText: "Fabric name e.g. Duchess satin",
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              ...colors.map(
+                (color) => GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedColor = color;
+                    });
+                  },
+                  child: ColorCircle(
+                    color: color,
+                    isSelected: selectedColor == color,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    shape: .circle,
+                    border: Border.all(
+                      color: AppColor.grey.withValues(alpha: .3),
+                    ),
+                  ),
+                  child: Icon(Icons.add, size: 10),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPaymentfee() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColor.plainWhite,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColor.grey.withValues(alpha: .2)),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 42,
+                width: 42,
+                decoration: BoxDecoration(
+                  color: AppColor.first.withValues(alpha: .1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.payment_outlined, color: AppColor.first),
+              ),
+              SizedBox(width: 10),
+              Text("Payment", style: AppFonts.label(color: AppColor.grey)),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Expanded(
+                child: CustomTextfield(
+                  controller: totalAmountController,
+                  prefix: Icons.currency_exchange,
+                  hintText: "total price",
+                  label: "Total",
+                ),
+              ),
+              Expanded(
+                child: CustomTextfield(
+                  controller: balanceAmountController,
+                  prefix: Icons.currency_exchange,
+                  hintText: "Amount Paid",
+                  label: "Balance",
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 

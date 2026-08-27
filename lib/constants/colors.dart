@@ -13,6 +13,7 @@ class AppColor {
   static const Color warning = Color(0xFFF39C12);
   static const Color error = Color(0xFFE74C3C);
   static const Color grey = Color(0xFFA1A1AA);
+  static const Color plainWhite = Color(0xFFFFFFFF);
 }
 
 class AppGradient {

@@ -6,6 +6,7 @@ class CustomTextfield extends StatefulWidget {
   final String hintText;
   final IconData prefix;
   final bool isPassword;
+  final String? label;
   final void Function(String)? onchanged;
   final TextEditingController? controller;
   const CustomTextfield({
@@ -15,6 +16,7 @@ class CustomTextfield extends StatefulWidget {
     this.isPassword = false,
     this.controller,
     this.onchanged,
+    this.label,
   });
 
   @override
@@ -93,6 +95,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
               : null,
           hintText: widget.hintText,
           hintStyle: AppFonts.bodyLarge(color: AppColor.grey),
+          labelText: widget.label,
+          labelStyle: AppFonts.body(color: AppColor.grey),
         ),
         obscureText: widget.isPassword ? _obscureText : false,
       ),

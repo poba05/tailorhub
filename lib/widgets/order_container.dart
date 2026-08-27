@@ -48,10 +48,7 @@ class OrderContainer extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            const Color(0xFFF9F5FF),
-          ],
+          colors: [Colors.white, const Color(0xFFF9F5FF)],
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
@@ -173,7 +170,10 @@ class OrderContainer extends StatelessWidget {
                     badgeColor = AppColor.grey;
                   }
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: badgeColor.withValues(alpha: .12),
                       borderRadius: BorderRadius.circular(12),

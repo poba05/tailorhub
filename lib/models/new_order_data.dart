@@ -1,9 +1,10 @@
 import 'package:tailorhub/models/clients.dart';
+import 'package:tailorhub/models/garment_type.dart';
 
 class NewOrderData {
   Clients? clients;
 
-  String? garmentType;
+  GarmentType? garment;
   String orderName = '';
 
   DateTime? deadline;

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
