@@ -19,7 +19,7 @@ class GarmentType {
       name: map['name'] as String,
       description: map['description'] as String?,
       icon: map['icon'] as String?,
-      isActive: map['isActive'] as bool? ?? true,
+      isActive: map['is_active'] as bool? ?? true,
     );
   }
 }

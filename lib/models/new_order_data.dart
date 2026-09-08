@@ -22,4 +22,6 @@ class NewOrderData {
   double get balance {
     return total - deposit;
   }
+
+  Map<String, double> measurements = {};
 }

@@ -3,7 +3,7 @@ import 'package:tailorhub/constants/colors.dart';
 
 class CustomButton extends StatelessWidget {
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isloading;
   const CustomButton({
     super.key,
