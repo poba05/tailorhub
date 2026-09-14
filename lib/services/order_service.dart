@@ -133,7 +133,7 @@ class OrderService {
         .from('orders')
         .select()
         .eq('user_id', user.id)
-        .inFilter('status', ['cutting', 'sewing']);
+        .inFilter('status', ['Cutting', 'Sewing']);
 
     return response.length;
   }

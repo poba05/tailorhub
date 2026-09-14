@@ -1,5 +1,13 @@
 String getInitials(String name) {
-  final parts = name.trim().split(RegExp(r'\s+'));
+  final trimmedName = name.trim();
+  if (trimmedName.isEmpty) {
+    return '';
+  }
+
+  final parts = trimmedName
+      .split(RegExp(r'\s+'))
+      .where((part) => part.isNotEmpty)
+      .toList();
 
   if (parts.isEmpty) {
     return '';

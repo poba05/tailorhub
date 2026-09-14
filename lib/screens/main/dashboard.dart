@@ -258,6 +258,16 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(height: 30),
                       previewOrders(context),
                       SizedBox(height: 30),
+                      Text(
+                        "Studio at a glance",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'CormorantGaramond',
+                          fontVariations: [FontVariation('wght', 500)],
+                          color: AppColor.text,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -407,7 +417,7 @@ class _DashboardState extends State<Dashboard> {
               isLoading
                   ? const SkeletonBox(height: 20, width: 160)
                   : Text(
-                      "Welcome, ${_profile?.fullName?.split(' ').first ?? 'Tailor'}",
+                      "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
                       style: AppFonts.heading(color: AppColor.text),
                     ),
               const SizedBox(height: 5),
@@ -464,7 +474,7 @@ class _DashboardState extends State<Dashboard> {
                 gradient: AppGradient.primaryGradient,
                 borderRadius: BorderRadius.circular(12),
               ),
-                child: Center(
+              child: Center(
                 child: Text(
                   getInitials(_profile?.fullName ?? ''),
                   style: AppFonts.bodyLarge(color: AppColor.background),
@@ -529,43 +539,46 @@ class _DashboardState extends State<Dashboard> {
       child: Row(
         crossAxisAlignment: .start,
         children: [
-          Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'CormorantGarmond',
-                  fontVariations: [FontVariation('wght', 500)],
-                  color: AppColor.text,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'CormorantGarmond',
+                    fontVariations: [FontVariation('wght', 500)],
+                    color: AppColor.text,
+                  ),
                 ),
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'DMSANS',
-                  fontVariations: [FontVariation('wght', 700)],
-                  color: AppColor.text,
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'DMSANS',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: AppColor.text,
+                  ),
                 ),
-              ),
-              Text(
-                subtitle ?? '',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'DMSANS',
-                  fontVariations: [FontVariation('wght', 400)],
-                  color: AppColor.grey,
+                Text(
+                  subtitle ?? '',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'DMSANS',
+                    fontVariations: [FontVariation('wght', 400)],
+                    color: AppColor.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Spacer(),
           CircularProgressIndicator(
             value: progress / 100,
-            strokeWidth: 8.0,
+            strokeWidth: 4.0,
             color: progressColor,
+            backgroundColor: AppColor.grey.withValues(alpha: .3),
           ),
         ],
       ),
