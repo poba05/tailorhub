@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/order.dart';
-import 'package:tailorhub/screens/order/new_orders.dart';
 import 'package:tailorhub/services/order_service.dart';
+import 'package:tailorhub/widgets/create_btn_popup.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custom_textfield.dart';
 import 'package:tailorhub/widgets/custombg.dart';
@@ -13,7 +11,7 @@ import 'package:tailorhub/widgets/empty_state.dart';
 import 'package:tailorhub/widgets/null_serach.dart';
 import 'package:tailorhub/widgets/order_container.dart';
 import 'package:intl/intl.dart';
-import 'package:tailorhub/widgets/quickaction.dart';
+import 'package:tailorhub/widgets/skeleton_box.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -33,7 +31,6 @@ class _OrderScreenState extends State<OrderScreen> {
   String? errorMessage;
 
   String selectedFilter = 'All';
-  bool showQuickActions = false;
 
   final List<String> filters = [
     'All',
@@ -68,7 +65,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
       setState(() {
         orders = result;
-        filteredOrders = Order.latestFirst(result);
+        filteredOrders = Order.sortByDeadline(result);
         isLoading = false;
       });
     } catch (e) {
@@ -139,7 +136,7 @@ class _OrderScreenState extends State<OrderScreen> {
         break;
     }
     setState(() {
-      filteredOrders = Order.latestFirst(result);
+      filteredOrders = Order.sortByDeadline(result);
     });
   }
 
@@ -155,83 +152,6 @@ class _OrderScreenState extends State<OrderScreen> {
       symbol: '₦',
       decimalDigits: 0,
     ).format(outstandingAmount);
-  }
-
-  Widget buildQuickAction() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        quickAction(
-          icon: Icons.cut,
-          title: "New order",
-          description: "Start a garment from an existing template",
-          onTap: () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return const NewOrders();
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                      final slide =
-                          Tween<Offset>(
-                            begin: const Offset(0, 0.08),
-                            end: Offset.zero,
-                          ).animate(
-                            CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.easeOutCubic,
-                            ),
-                          );
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(position: slide, child: child),
-                      );
-                    },
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 10),
-        quickAction(
-          icon: Icons.person_add,
-          title: "New Client",
-          description: "Add a new client to your list",
-          onTap: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget buildAddButton() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          showQuickActions = !showQuickActions;
-        });
-      },
-      child: AnimatedRotation(
-        turns: showQuickActions ? 0.125 : 0,
-        duration: const Duration(milliseconds: 250),
-        child: Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            color: AppColor.first,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.first.withValues(alpha: .3),
-                blurRadius: 15,
-                spreadRadius: 3,
-              ),
-            ],
-          ),
-          child: Icon(Icons.add, size: 28, color: AppColor.background),
-        ),
-      ),
-    );
   }
 
   @override
@@ -250,28 +170,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
-          if (showQuickActions)
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showQuickActions = false;
-                  });
-                },
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
-                  child: Container(color: Colors.black.withOpacity(0.12)),
-                ),
-              ),
-            ),
-          Positioned(
-            bottom: 75,
-            left: 260,
-            right: 0,
-            child: Center(child: buildAddButton()),
-          ),
-          if (showQuickActions)
-            Positioned(bottom: 135, right: 20, child: buildQuickAction()),
+          const CreateBtnPopup(),
         ],
       ),
     );
@@ -279,7 +178,15 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Widget buildOrderContent() {
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Column(
+        children: List.generate(
+          4,
+          (_) => const Padding(
+            padding: EdgeInsets.only(bottom: 8),
+            child: SkeletonBox(height: 80, borderRadius: 16),
+          ),
+        ),
+      );
     }
     if (errorMessage != null) {
       return Center(

@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
+import 'package:tailorhub/models/clients.dart';
 import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/models/profile.dart';
-import 'package:tailorhub/screens/order/new_orders.dart';
 import 'package:tailorhub/screens/order/order_screen.dart';
+import 'package:tailorhub/services/client_services.dart';
 import 'package:tailorhub/services/profile_service.dart';
 import 'package:tailorhub/utils/name_utils.dart';
+import 'package:tailorhub/widgets/create_btn_popup.dart';
 import 'package:tailorhub/widgets/custombg.dart';
 import 'package:intl/intl.dart';
 import 'package:tailorhub/widgets/empty_state.dart';
 import 'package:tailorhub/widgets/order_container.dart';
 import 'package:tailorhub/services/order_service.dart';
-import 'package:tailorhub/widgets/quickaction.dart';
+import 'package:tailorhub/widgets/skeleton_box.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -26,15 +27,23 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final ProfileService _profileService = ProfileService();
   final OrderService _orderService = OrderService();
+  final ClientServices _clientServices = ClientServices();
 
   Profile? _profile;
   List<Order> orders = [];
+  List<Clients> clients = [];
 
   bool isLoading = false;
-  bool showQuickActions = false;
 
   bool isOrderLoading = false;
   String? ordersError;
+
+  int totalClients = 0;
+  int clientsThisMonth = 0;
+  int activeOrders = 0;
+  int dueThisWeek = 0;
+  int completedOrders = 0;
+  int pending = 0;
 
   @override
   void initState() {
@@ -45,6 +54,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> loadProfile() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final result = await _profileService.getCurrentProfile();
 
@@ -92,82 +104,70 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Widget buildQuickAction() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        quickAction(
-          icon: Icons.cut,
-          title: "New order",
-          description: "Start a garment from an existing template",
-          onTap: () {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return const NewOrders();
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                      final slide =
-                          Tween<Offset>(
-                            begin: const Offset(0, 0.08),
-                            end: Offset.zero,
-                          ).animate(
-                            CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.easeOutCubic,
-                            ),
-                          );
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(position: slide, child: child),
-                      );
-                    },
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 10),
-        quickAction(
-          icon: Icons.person_add,
-          title: "New Client",
-          description: "Add a new client to your list",
-          onTap: () {},
-        ),
-      ],
-    );
+  Future<void> loadClients() async {
+    final result = await _clientServices.getclients();
+
+    if (!mounted) return;
+
+    setState(() {
+      clients = result;
+    });
   }
 
-  Widget buildAddButton() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          showQuickActions = !showQuickActions;
-        });
-      },
-      child: AnimatedRotation(
-        turns: showQuickActions ? 0.125 : 0,
-        duration: const Duration(milliseconds: 250),
-        child: Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            color: AppColor.first,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.first.withValues(alpha: .3),
-                blurRadius: 15,
-                spreadRadius: 3,
-              ),
-            ],
-          ),
-          child: Icon(Icons.add, size: 28, color: AppColor.background),
-        ),
-      ),
-    );
+  Future<void> loadDashboardData() async {
+    final clients = await _clientServices.getclients();
+    final thisMonth = await _clientServices.getClientsCreatedThisMonth();
+    final totalActiveOrders = await _orderService.getActiveOrders();
+    final dueinaWeek = await _orderService.getOrdersDueinOneWeek();
+    final ordersCompleted = await _orderService.getCompletdOrders();
+    final awaitPayment = await _orderService.getPending();
+
+    if (!mounted) return;
+
+    setState(() async {
+      totalClients = clients.length;
+      clientsThisMonth = thisMonth;
+      activeOrders = totalActiveOrders;
+      dueThisWeek = dueinaWeek;
+      completedOrders = ordersCompleted;
+      pending = awaitPayment;
+    });
   }
+
+  List<dynamic> get summaryDetails => [
+    {
+      'id': 1,
+      'figure': totalClients,
+      'title': "Total Clients",
+      'description': '+$clientsThisMonth Last month',
+      'percentage': 83,
+      'color': AppColor.blue,
+    },
+    {
+      'id': 2,
+      'figure': activeOrders,
+      'title': "Active orders",
+      'description': '$dueThisWeek due this week',
+      'percentage': 68,
+      'color': AppColor.first,
+    },
+    {
+      'id': 3,
+      'figure': completedOrders,
+      'title': "Total Clients",
+      'description': 'Steadily be on time',
+      'percentage': 96,
+      'color': AppColor.success,
+    },
+    {
+      'id': 4,
+      'figure': pending,
+      'title': "Total Clients",
+      'description': 'awaiting deposit',
+      'percentage': 32,
+      'color': AppColor.secondary,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -258,34 +258,34 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(height: 30),
                       previewOrders(context),
                       SizedBox(height: 30),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: summaryDetails.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1.5,
+                        ),
+                        itemBuilder: (context, index) {
+                          final items = summaryDetails[index];
+                          return buildStatsCard(
+                            value: '${items['figure']}',
+                            title: items['title'],
+                            subtitle: items['description']?.toString() ?? '',
+                            progress: (items['percentage'] as num).toDouble(),
+                            progressColor: items['color'] as Color,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-          if (showQuickActions)
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showQuickActions = false;
-                  });
-                },
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
-                  child: Container(color: Colors.black.withOpacity(0.12)),
-                ),
-              ),
-            ),
-          Positioned(
-            bottom: 75,
-            left: 260,
-            right: 0,
-            child: Center(child: buildAddButton()),
-          ),
-          if (showQuickActions)
-            Positioned(bottom: 135, right: 20, child: buildQuickAction()),
+          const CreateBtnPopup(),
         ],
       ),
     );
@@ -404,10 +404,12 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               const SizedBox(height: 10),
-              Text(
-                "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
-                style: AppFonts.heading(color: AppColor.text),
-              ),
+              isLoading
+                  ? const SkeletonBox(height: 20, width: 160)
+                  : Text(
+                      "Welcome, ${_profile?.fullName?.split(' ').first ?? 'Tailor'}",
+                      style: AppFonts.heading(color: AppColor.text),
+                    ),
               const SizedBox(height: 5),
               Text(
                 "what are we sketching today?",
@@ -462,9 +464,9 @@ class _DashboardState extends State<Dashboard> {
                 gradient: AppGradient.primaryGradient,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Center(
+                child: Center(
                 child: Text(
-                  _profile == null ? '' : getInitials(_profile!.fullName),
+                  getInitials(_profile?.fullName ?? ''),
                   style: AppFonts.bodyLarge(color: AppColor.background),
                 ),
               ),
@@ -472,6 +474,101 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ],
+    );
+  }
+
+  Column summaryCards() {
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        Text(
+          "Studio at a glance",
+          style: TextStyle(
+            fontSize: 24,
+            fontFamily: 'CormorantGaramond',
+            fontVariations: [FontVariation('wght', 500)],
+            color: AppColor.text,
+          ),
+        ),
+        SizedBox(height: 10),
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemBuilder: (context, index) {
+            return Container();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildStatsCard({
+    required String value,
+    required String title,
+    required String? subtitle,
+    required double progress,
+    required Color progressColor,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColor.grey.withValues(alpha: .15)),
+        borderRadius: BorderRadius.circular(14),
+        color: AppColor.plainWhite,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.first.withValues(alpha: .05),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: .start,
+        children: [
+          Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'CormorantGarmond',
+                  fontVariations: [FontVariation('wght', 500)],
+                  color: AppColor.text,
+                ),
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'DMSANS',
+                  fontVariations: [FontVariation('wght', 700)],
+                  color: AppColor.text,
+                ),
+              ),
+              Text(
+                subtitle ?? '',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'DMSANS',
+                  fontVariations: [FontVariation('wght', 400)],
+                  color: AppColor.grey,
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          CircularProgressIndicator(
+            value: progress / 100,
+            strokeWidth: 8.0,
+            color: progressColor,
+          ),
+        ],
+      ),
     );
   }
 }

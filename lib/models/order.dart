@@ -19,10 +19,11 @@ class Order {
     required this.percentComplete,
   });
 
-  static List<Order> latestFirst(List<Order> orders) {
+  // in models/order.dart
+  static List<Order> sortByDeadline(List<Order> orders) {
     final sorted = List<Order>.from(orders)
-      ..sort((a, b) => b.deadline.compareTo(a.deadline));
-    return sorted.take(3).toList();
+      ..sort((a, b) => a.deadline.compareTo(b.deadline));
+    return sorted;
   }
 
   factory Order.fromMap(Map<String, dynamic> map) {

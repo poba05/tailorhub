@@ -23,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool isLoading = false;
+
   @override
   void dispose() {
     emailController.dispose();
@@ -34,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool ischecked = false;
   @override
   Widget build(BuildContext context) {
-    bool isLoading = false;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Custombg(

@@ -32,15 +32,10 @@ class OrderService {
       )
     ''')
         .eq('user_id', user.id)
-        .order('deadline', ascending: true);
+        .order('deadline', ascending: true)
+        .limit(3);
 
-    final orders = response.map<Order>((item) => Order.fromMap(item)).toList();
-
-    orders.sort((a, b) {
-      return a.deadline.compareTo(b.deadline);
-    });
-
-    return orders.take(3).toList();
+    return response.map<Order>((item) => Order.fromMap(item)).toList();
   }
 
   //                                            GET ALL ORDERS
@@ -98,37 +93,97 @@ class OrderService {
       throw Exception('User is not logged in');
     }
 
-    final response = await _supabaseClient
-        .from('orders')
-        .insert({
-          'user_id': user.id,
-          'client_id': orderData.clients!.id,
-          'garment_type_id': orderData.garment!.id,
-          'order_type': orderData.garment!.name,
-          'order_name': orderData.orderName,
-          'order_price': orderData.total,
-          'deadline': orderData.deadline?.toIso8601String().split('T').first,
-          'fabric_name': orderData.fabricName,
-          'fabric_color': orderData.fabricColor,
-          'notes': orderData.notes,
-        })
-        .select('id')
-        .single();
+    final measurementsJson = orderData.measurements.entries
+        .map((e) => {'measurement_id': e.key, 'value': e.value})
+        .toList();
 
-    final orderId = response['id'] as String;
-
-    if (orderData.measurements.isNotEmpty) {
-      final measurementRow = orderData.measurements.entries.map((entry) {
-        return {
-          'order_id': orderId,
-          'measurement_id': entry.key,
-          'value': entry.value,
-        };
-      }).toList();
-
-      await _supabaseClient.from('order_measurements').insert(measurementRow);
-    }
+    final orderId = _supabaseClient
+        .rpc(
+          'create_orders_with_measurements',
+          params: {
+            'p_user_id': user.id,
+            'p_client_id': orderData.clients!.id,
+            'p_garment_type_id': orderData.garment!.id,
+            'p_order_type': orderData.garment!.name,
+            'p_order_name': orderData.orderName,
+            'p_order_price': orderData.total,
+            'p_deadline': orderData.deadline
+                ?.toIso8601String()
+                .split('T')
+                .first,
+            'p_fabric_name': orderData.fabricName,
+            'p_fabric_color': orderData.fabricColor,
+            'p_notes': orderData.notes,
+            'p_measurements': measurementsJson,
+          },
+        )
+        .toString();
 
     return orderId;
+  }
+
+  Future<int> getActiveOrders() async {
+    final user = _supabaseClient.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not Logged in');
+    }
+
+    final response = await _supabaseClient
+        .from('orders')
+        .select()
+        .eq('user_id', user.id)
+        .inFilter('status', ['cutting', 'sewing']);
+
+    return response.length;
+  }
+
+  Future<int> getCompletdOrders() async {
+    final user = _supabaseClient.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not Logged in');
+    }
+
+    final response = await _supabaseClient
+        .from('orders')
+        .select()
+        .eq('user_id', user.id)
+        .eq('status', 'ready');
+
+    return response.length;
+  }
+
+  Future<int> getOrdersDueinOneWeek() async {
+    final user = _supabaseClient.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final now = DateTime.now();
+
+    final oneWeekFromNow = now.add(const Duration(days: 7));
+
+    final response = await _supabaseClient
+        .from('orders')
+        .select()
+        .eq('user_id', user.id)
+        .gte('deadline', now.toIso8601String())
+        .lte('deadline', oneWeekFromNow.toIso8601String());
+
+    return response.length;
+  }
+
+  Future<int> getPending() async {
+    final user = _supabaseClient.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not Logged in');
+    }
+
+    final response = await _supabaseClient.rpc('get_orders_with_balance');
+
+    return response.length;
   }
 }

@@ -14,6 +14,7 @@ class AuthService {
     final response = await _supabaseClient.auth.signUp(
       email: email,
       password: password,
+      data: {'full_name': fullname, 'business_name': businessname},
     );
 
     final user = response.user;
@@ -21,12 +22,6 @@ class AuthService {
     if (user == null) {
       throw Exception("Unable to create account");
     }
-
-    await _supabaseClient.from("profiles").insert({
-      'user_id': user.id,
-      'full_name': fullname,
-      'business_name': businessname,
-    });
 
     return response;
   }
