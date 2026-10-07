@@ -97,29 +97,24 @@ class OrderService {
         .map((e) => {'measurement_id': e.key, 'value': e.value})
         .toList();
 
-    final orderId = _supabaseClient
-        .rpc(
-          'create_orders_with_measurements',
-          params: {
-            'p_user_id': user.id,
-            'p_client_id': orderData.clients!.id,
-            'p_garment_type_id': orderData.garment!.id,
-            'p_order_type': orderData.garment!.name,
-            'p_order_name': orderData.orderName,
-            'p_order_price': orderData.total,
-            'p_deadline': orderData.deadline
-                ?.toIso8601String()
-                .split('T')
-                .first,
-            'p_fabric_name': orderData.fabricName,
-            'p_fabric_color': orderData.fabricColor,
-            'p_notes': orderData.notes,
-            'p_measurements': measurementsJson,
-          },
-        )
-        .toString();
+    final orderId = _supabaseClient.rpc(
+      'create_orders_with_measurements',
+      params: {
+        'p_user_id': user.id,
+        'p_client_id': orderData.clients!.id,
+        'p_garment_type_id': orderData.garment!.id,
+        'p_order_type': orderData.garment!.name,
+        'p_order_name': orderData.orderName,
+        'p_order_price': orderData.total,
+        'p_deadline': orderData.deadline?.toIso8601String().split('T').first,
+        'p_fabric_name': orderData.fabricName,
+        'p_fabric_color': orderData.fabricColor,
+        'p_notes': orderData.notes,
+        'p_measurements': measurementsJson,
+      },
+    );
 
-    return orderId;
+    return orderId.toString();
   }
 
   Future<int> getActiveOrders() async {
@@ -149,7 +144,7 @@ class OrderService {
         .from('orders')
         .select()
         .eq('user_id', user.id)
-        .eq('status', 'ready');
+        .eq('status', 'Ready');
 
     return response.length;
   }

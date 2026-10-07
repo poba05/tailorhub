@@ -3,6 +3,7 @@ import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/clients.dart';
 import 'package:tailorhub/models/clients_category.dart';
+import 'package:tailorhub/screens/client/new_client.dart';
 import 'package:tailorhub/services/client_services.dart';
 import 'package:tailorhub/widgets/client_container.dart';
 import 'package:tailorhub/widgets/create_btn_popup.dart';
@@ -250,7 +251,7 @@ class _ClientScreenState extends State<ClientScreen> {
             Text(errorMessage!, style: AppFonts.body(color: AppColor.grey)),
             const SizedBox(height: 10),
             CustomButton(
-              onPressed: () {},
+              onPressed: loadClients,
               child: Row(
                 mainAxisAlignment: .center,
                 children: [
@@ -272,13 +273,41 @@ class _ClientScreenState extends State<ClientScreen> {
         title: "No clients yet",
         subTitle: "Create Clients to appear here",
         buttonText: 'New Client',
+        onButtonPressed: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return const NewClient();
+              },
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    final slide =
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.08),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        );
+
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(position: slide, child: child),
+                    );
+                  },
+            ),
+          );
+        },
       );
     }
     if (filteredClients.isEmpty) {
       return NullSerach();
     }
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 300, left: 8, right: 8, bottom: 20),
+      padding: const EdgeInsets.only(top: 160, left: 8, right: 8, bottom: 20),
       itemCount: filteredClients.length,
       itemBuilder: (context, index) {
         final client = filteredClients[index];

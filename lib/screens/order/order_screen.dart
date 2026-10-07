@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/order.dart';
+import 'package:tailorhub/screens/order/new_orders.dart';
 import 'package:tailorhub/services/order_service.dart';
 import 'package:tailorhub/widgets/create_btn_popup.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
@@ -180,10 +181,10 @@ class _OrderScreenState extends State<OrderScreen> {
     if (isLoading) {
       return Column(
         children: List.generate(
-          4,
-          (_) => const Padding(
+          5,
+          (index) => const Padding(
             padding: EdgeInsets.only(bottom: 8),
-            child: SkeletonBox(height: 80, borderRadius: 16),
+            child: SkeletonBox(height: 100, width: double.infinity),
           ),
         ),
       );
@@ -196,7 +197,7 @@ class _OrderScreenState extends State<OrderScreen> {
             Text(errorMessage!, style: AppFonts.body(color: AppColor.grey)),
             const SizedBox(height: 10),
             CustomButton(
-              onPressed: () {},
+              onPressed: loadOrders,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -218,6 +219,34 @@ class _OrderScreenState extends State<OrderScreen> {
         title: "No orders yet",
         subTitle: "Create new orders to appear here",
         buttonText: "New Order",
+        onButtonPressed: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return const NewOrders();
+              },
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    final slide =
+                        Tween<Offset>(
+                          begin: const Offset(0, 0.08),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        );
+
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(position: slide, child: child),
+                    );
+                  },
+            ),
+          );
+        },
       );
     }
     if (filteredOrders.isEmpty) {

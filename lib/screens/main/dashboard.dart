@@ -51,6 +51,8 @@ class _DashboardState extends State<Dashboard> {
 
     loadProfile();
     loadOrders();
+    loadClients();
+    loadDashboardData();
   }
 
   Future<void> loadProfile() async {
@@ -124,7 +126,7 @@ class _DashboardState extends State<Dashboard> {
 
     if (!mounted) return;
 
-    setState(() async {
+    setState(() {
       totalClients = clients.length;
       clientsThisMonth = thisMonth;
       activeOrders = totalActiveOrders;
@@ -154,7 +156,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'id': 3,
       'figure': completedOrders,
-      'title': "Total Clients",
+      'title': "Completed",
       'description': 'Steadily be on time',
       'percentage': 96,
       'color': AppColor.success,
@@ -162,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'id': 4,
       'figure': pending,
-      'title': "Total Clients",
+      'title': "Pending",
       'description': 'awaiting deposit',
       'percentage': 32,
       'color': AppColor.secondary,
@@ -258,37 +260,7 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(height: 30),
                       previewOrders(context),
                       SizedBox(height: 30),
-                      Text(
-                        "Studio at a glance",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontFamily: 'CormorantGaramond',
-                          fontVariations: [FontVariation('wght', 500)],
-                          color: AppColor.text,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: summaryDetails.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1.5,
-                        ),
-                        itemBuilder: (context, index) {
-                          final items = summaryDetails[index];
-                          return buildStatsCard(
-                            value: '${items['figure']}',
-                            title: items['title'],
-                            subtitle: items['description']?.toString() ?? '',
-                            progress: (items['percentage'] as num).toDouble(),
-                            progressColor: items['color'] as Color,
-                          );
-                        },
-                      ),
+                      summaryCards(),
                     ],
                   ),
                 ),
@@ -502,17 +474,32 @@ class _DashboardState extends State<Dashboard> {
         ),
         SizedBox(height: 10),
         GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: summaryDetails.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 1.5,
           ),
           itemBuilder: (context, index) {
-            return Container();
+            final items = summaryDetails[index];
+            return buildStatsCard(
+              value: '${items['figure']}',
+              title: items['title'],
+              subtitle: items['description']?.toString() ?? '',
+              progress: (items['percentage'] as num).toDouble(),
+              progressColor: items['color'] as Color,
+            );
           },
         ),
       ],
     );
+  }
+
+  Column quickActions() {
+    return Column();
   }
 
   Widget buildStatsCard({
@@ -523,10 +510,10 @@ class _DashboardState extends State<Dashboard> {
     required Color progressColor,
   }) {
     return Container(
-      padding: EdgeInsets.all(14),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: AppColor.grey.withValues(alpha: .15)),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
         color: AppColor.plainWhite,
         boxShadow: [
           BoxShadow(
@@ -539,39 +526,39 @@ class _DashboardState extends State<Dashboard> {
       child: Row(
         crossAxisAlignment: .start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'CormorantGarmond',
-                    fontVariations: [FontVariation('wght', 500)],
-                    color: AppColor.text,
-                  ),
+          Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'CormorantGaramond',
+                  fontVariations: [FontVariation('wght', 500)],
+                  color: AppColor.text,
                 ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'DMSANS',
-                    fontVariations: [FontVariation('wght', 700)],
-                    color: AppColor.text,
-                  ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'DMSANS',
+                  fontVariations: [FontVariation('wght', 700)],
+                  color: AppColor.text,
                 ),
-                Text(
-                  subtitle ?? '',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontFamily: 'DMSANS',
-                    fontVariations: [FontVariation('wght', 400)],
-                    color: AppColor.grey,
-                  ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                subtitle ?? '',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'DMSANS',
+                  fontVariations: [FontVariation('wght', 400)],
+                  color: AppColor.grey,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Spacer(),
           CircularProgressIndicator(

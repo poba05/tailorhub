@@ -7,11 +7,13 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String subTitle;
   final String buttonText;
+  final VoidCallback? onButtonPressed;
   const EmptyState({
     super.key,
     required this.title,
     required this.subTitle,
     required this.buttonText,
+    this.onButtonPressed,
   });
 
   @override

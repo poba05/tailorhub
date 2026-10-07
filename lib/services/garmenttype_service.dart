@@ -29,4 +29,19 @@ class GarmenttypeService {
         .map<GarmentType>((item) => GarmentType.fromMap(item))
         .toList();
   }
+
+  Future<List<GarmentType>> getTemplates() async {
+    final user = _supabaseClient.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final response = await _supabaseClient
+        .from('garment_types')
+        .select()
+        .eq('user_id', user.id);
+
+    return (response as List).map((item) => GarmentType.fromMap(item)).toList();
+  }
 }

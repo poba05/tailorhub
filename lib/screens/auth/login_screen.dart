@@ -5,7 +5,7 @@ import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/screens/auth/forgot_password.dart';
 import 'package:tailorhub/screens/auth/signup_screen.dart';
-import 'package:tailorhub/screens/main/dashboard.dart';
+import 'package:tailorhub/screens/main/main_screen.dart';
 import 'package:tailorhub/services/auth_service.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custom_textfield.dart';
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               pageBuilder:
                                   (context, animation, secondaryAnimation) {
-                                    return const Dashboard();
+                                    return const MainScreen();
                                   },
                               transitionsBuilder:
                                   (

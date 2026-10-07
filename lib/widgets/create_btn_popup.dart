@@ -142,13 +142,13 @@ class _CreateBtnPopupState extends State<CreateBtnPopup> {
             ),
           ),
         Positioned(
-          bottom: 75,
+          bottom: 35,
           left: 260,
           right: 0,
           child: Center(child: _buildAddButton()),
         ),
         if (showQuickActions)
-          Positioned(bottom: 135, right: 20, child: _buildQuickAction(context)),
+          Positioned(bottom: 105, right: 20, child: _buildQuickAction(context)),
       ],
     );
   }
