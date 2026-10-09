@@ -3,6 +3,7 @@ import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/screens/order/new_orders.dart';
+import 'package:tailorhub/screens/order/order_detail_screen.dart';
 import 'package:tailorhub/services/order_service.dart';
 import 'package:tailorhub/widgets/create_btn_popup.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
@@ -260,7 +261,15 @@ class _OrderScreenState extends State<OrderScreen> {
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: OrderContainer(order: order),
+          child: OrderContainer(
+            order: order,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => OrderDetailScreen(order: order),
+              ),
+            ),
+          ),
         );
       },
     );

@@ -16,18 +16,18 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="TailorHub keeps your clients, measurements and tailoring orders in one place.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="tailorhub">
+  <meta name="apple-mobile-web-app-title" content="TailorHub">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png">
 
-  <title>tailorhub</title>
+  <title>TailorHub</title>
   <link rel="manifest" href="manifest.json">
   
   
@@ -48,15 +48,99 @@
   
   <style id="splash-screen-style">
     html {
-      height: 100%
+      height: 100%;
     }
 
     body {
       margin: 0;
       min-height: 100%;
-      background-color: #ffffff;
-      background-image: url("splash/img/light-background.png");
-      background-size: 100% 100%;
+      min-height: 100vh;
+      background-color: #160B24;
+      background-image: radial-gradient(ellipse at 50% 42%, #51206f 0%, #28103c 42%, #160B24 82%);
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    #splash {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    .splash-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(-12px);
+      animation: arrive 650ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .splash-mark {
+      display: grid;
+      width: 76px;
+      height: 76px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,.07));
+      box-shadow: 0 18px 50px rgba(8,2,18,.28), inset 0 1px rgba(255,255,255,.2);
+    }
+
+    .splash-mark svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: #fff;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .splash-title {
+      margin-top: 6px;
+      font-family: Georgia, serif;
+      font-size: 34px;
+      letter-spacing: -.5px;
+    }
+
+    .splash-caption {
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      letter-spacing: .5px;
+    }
+
+    .splash-loader {
+      display: flex;
+      gap: 6px;
+      margin-top: 28px;
+    }
+
+    .splash-loader span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #e99ad4;
+      animation: pulse 1s ease-in-out infinite alternate;
+    }
+
+    .splash-loader span:nth-child(2) { animation-delay: 160ms; }
+    .splash-loader span:nth-child(3) { animation-delay: 320ms; }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(-12px); }
+    }
+
+    @keyframes pulse {
+      from { opacity: .3; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(-3px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
     }
 
     .center {
@@ -114,7 +198,20 @@
   </script>
 </head>
 <body>
-  
+  <div id="splash" role="status" aria-label="Loading TailorHub">
+    <div class="splash-brand">
+      <div class="splash-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32">
+          <circle cx="8" cy="23" r="4"></circle>
+          <circle cx="24" cy="23" r="4"></circle>
+          <path d="M11 20 24 6M21 20 8 6M14 16l4 4"></path>
+        </svg>
+      </div>
+      <div class="splash-title">TailorHub</div>
+      <div class="splash-caption">Your studio, in sync.</div>
+      <div class="splash-loader" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </div>
   <script src="flutter_bootstrap.js" async=""></script>
 
 

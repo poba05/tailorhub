@@ -4,6 +4,7 @@ import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/models/clients.dart';
 import 'package:tailorhub/models/clients_category.dart';
 import 'package:tailorhub/screens/client/new_client.dart';
+import 'package:tailorhub/screens/client/client_detail_screen.dart';
 import 'package:tailorhub/services/client_services.dart';
 import 'package:tailorhub/widgets/client_container.dart';
 import 'package:tailorhub/widgets/create_btn_popup.dart';
@@ -314,7 +315,13 @@ class _ClientScreenState extends State<ClientScreen> {
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: ClientContainer(client: client),
+          child: ClientContainer(
+            client: client,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ClientDetailScreen(client: client)),
+            ),
+          ),
         );
       },
     );

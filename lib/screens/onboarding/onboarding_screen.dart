@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tailorhub/models/onboarding.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
+import 'package:tailorhub/models/onboarding.dart';
 import 'package:tailorhub/screens/auth/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -12,23 +12,21 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   int currentpage = 0;
   late final AnimationController _controller;
-  Animation<double> _pulseAnimation = const AlwaysStoppedAnimation(1.0);
+  late final Animation<double> _floatAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 2600),
+    )..repeat(reverse: true);
+    _floatAnimation = Tween<double>(begin: -5, end: 5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    _pulseAnimation = Tween<double>(
-      begin: 0.98,
-      end: 1.02,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _controller.repeat(reverse: true);
   }
 
   @override
@@ -39,309 +37,218 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   void nextpage() {
     if (currentpage < onboarding.length - 1) {
-      setState(() {
-        currentpage += 1;
-      });
-    } else {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return const LoginScreen();
-          },
-          transitionsBuilder: (context, animation, secondaryAnimtion, child) {
-            final slide =
-                Tween<Offset>(
-                  begin: const Offset(0, 0.08),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  ),
-                );
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(position: slide, child: child),
-            );
-          },
-        ),
-      );
+      setState(() => currentpage += 1);
+      return;
     }
+    _openLogin();
+  }
+
+  void _openLogin() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final slide = Tween<Offset>(
+            begin: const Offset(0, 0.06),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(position: slide, child: child),
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3EEFF),
+      backgroundColor: const Color(0xFFF6F1FA),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: Builder(
-                  key: ValueKey<int>(currentpage),
-                  builder: (context) {
-                    final page = onboarding[currentpage];
-
-                    return Stack(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 30,
-                                  left: 30,
-                                  top: 80,
-                                  bottom: 20,
-                                ),
-                                child: ScaleTransition(
-                                  scale: _pulseAnimation,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(18),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.white.withValues(alpha: 0.9),
-                                          AppColor.primary.withValues(
-                                            alpha: 0.06,
-                                          ),
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppColor.primary.withValues(
-                                            alpha: 0.08,
-                                          ),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 12),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Image.asset(
-                                      page.image,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 40),
-                            Container(
-                              height: 300,
-                              width: double.infinity,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(28),
-                                  topRight: Radius.circular(28),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 30,
-                                  right: 24,
-                                  left: 24,
-                                  bottom: 10,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      page.header.toUpperCase(),
-                                      style: AppFonts.label(
-                                        color: AppColor.error,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      page.title,
-                                      style: AppFonts.heading(
-                                        color: AppColor.text,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      page.description,
-                                      style: AppFonts.bodyLarge(
-                                        color: AppColor.grey,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 40),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: List.generate(
-                                            onboarding.length,
-                                            (index) {
-                                              final isActive =
-                                                  currentpage == index;
-
-                                              return AnimatedContainer(
-                                                duration: const Duration(
-                                                  milliseconds: 250,
-                                                ),
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 4,
-                                                    ),
-                                                width: isActive ? 24 : 8,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                  color: isActive
-                                                      ? AppColor.primary
-                                                      : AppColor.grey
-                                                            .withValues(
-                                                              alpha: 0.32,
-                                                            ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            gradient:
-                                                AppGradient.primaryGradient,
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          child: ElevatedButton(
-                                            onPressed: nextpage,
-                                            style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 2,
-                                                  ),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  currentpage ==
-                                                          onboarding.length - 1
-                                                      ? "Get Started"
-                                                      : "Next",
-                                                  style: AppFonts.buttonText(
-                                                    color: AppColor.background,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_right_alt_outlined,
-                                                  color: AppColor.background,
-                                                  size: 20,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          top: 6,
-                          right: 15,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                        return const LoginScreen();
-                                      },
-                                  transitionsBuilder:
-                                      (
-                                        context,
-                                        animation,
-                                        secondaryAnimtion,
-                                        child,
-                                      ) {
-                                        final slide =
-                                            Tween<Offset>(
-                                              begin: const Offset(0, 0.08),
-                                              end: Offset.zero,
-                                            ).animate(
-                                              CurvedAnimation(
-                                                parent: animation,
-                                                curve: Curves.easeOutCubic,
-                                              ),
-                                            );
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: SlideTransition(
-                                            position: slide,
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white.withValues(
-                                alpha: 0.7,
-                              ),
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                            ),
-                            child: Text(
-                              "Skip",
-                              style: AppFonts.buttonText(color: AppColor.text),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+          child: Column(
+            children: [
+              _buildTopBar(),
+              const SizedBox(height: 8),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.025, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  ),
+                  child: _buildPage(key: ValueKey(currentpage)),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTopBar() => Row(
+    children: [
+      Container(
+        height: 38,
+        width: 38,
+        decoration: BoxDecoration(
+          gradient: AppGradient.primaryGradient,
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: const Icon(Icons.content_cut_rounded, color: Colors.white, size: 21),
+      ),
+      const SizedBox(width: 10),
+      Text(
+        'TailorHub',
+        style: TextStyle(
+          fontFamily: 'DMSANS',
+          fontSize: 17,
+          fontVariations: const [FontVariation('wght', 700)],
+          color: AppColor.text,
+        ),
+      ),
+      const Spacer(),
+      TextButton(
+        onPressed: _openLogin,
+        style: TextButton.styleFrom(
+          foregroundColor: AppColor.first,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        ),
+        child: Text('Skip', style: AppFonts.buttonText(color: AppColor.first)),
+      ),
+    ],
+  );
+
+  Widget _buildPage({required Key key}) {
+    final page = onboarding[currentpage];
+    return Column(
+      key: key,
+      children: [
+        Expanded(
+          flex: 11,
+          child: AnimatedBuilder(
+            animation: _floatAnimation,
+            builder: (context, child) => Transform.translate(
+              offset: Offset(0, _floatAnimation.value),
+              child: child,
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 250,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        AppColor.secondary.withValues(alpha: .16),
+                        AppColor.first.withValues(alpha: .04),
+                        Colors.transparent,
+                      ],
+                      stops: const [0, .62, 1],
+                    ),
+                  ),
+                ),
+                Image.asset(
+                  page.image,
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: AppColor.first.withValues(alpha: .08)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.primary.withValues(alpha: .08),
+                blurRadius: 26,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+                decoration: BoxDecoration(
+                  color: AppColor.tertiary.withValues(alpha: .75),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(page.header.toUpperCase(), style: AppFonts.label(color: AppColor.first)),
+              ),
+              const SizedBox(height: 14),
+              Text(page.title, style: AppFonts.heading(color: AppColor.text)),
+              const SizedBox(height: 9),
+              Text(page.description, style: AppFonts.body(color: AppColor.grey)),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Row(
+                    children: List.generate(onboarding.length, (index) {
+                      final isActive = currentpage == index;
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        margin: const EdgeInsets.only(right: 6),
+                        width: isActive ? 22 : 7,
+                        height: 7,
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? AppColor.first
+                              : AppColor.grey.withValues(alpha: .32),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                    }),
+                  ),
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: nextpage,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColor.first,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(currentpage == onboarding.length - 1 ? 'Get started' : 'Next'),
+                        const SizedBox(width: 7),
+                        const Icon(Icons.arrow_forward_rounded, size: 17),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

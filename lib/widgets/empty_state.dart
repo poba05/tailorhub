@@ -8,12 +8,14 @@ class EmptyState extends StatelessWidget {
   final String subTitle;
   final String buttonText;
   final VoidCallback? onButtonPressed;
+  final IconData buttonIcon;
   const EmptyState({
     super.key,
     required this.title,
     required this.subTitle,
     required this.buttonText,
     this.onButtonPressed,
+    this.buttonIcon = Icons.add,
   });
 
   @override
@@ -72,7 +74,7 @@ class EmptyState extends StatelessWidget {
           const SizedBox(height: 20),
 
           ElevatedButton(
-            onPressed: () {},
+            onPressed: onButtonPressed,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               shape: RoundedRectangleBorder(
@@ -84,7 +86,7 @@ class EmptyState extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add, size: 20, color: AppColor.background),
+                Icon(buttonIcon, size: 20, color: AppColor.background),
                 const SizedBox(width: 8),
                 Text(
                   buttonText,

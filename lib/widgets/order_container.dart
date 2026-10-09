@@ -6,7 +6,8 @@ import 'package:tailorhub/utils/name_utils.dart';
 
 class OrderContainer extends StatelessWidget {
   final Order order;
-  const OrderContainer({super.key, required this.order});
+  final VoidCallback? onTap;
+  const OrderContainer({super.key, required this.order, this.onTap});
 
   int get daysRemaining {
     final now = DateTime.now();
@@ -41,7 +42,12 @@ class OrderContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -221,6 +227,6 @@ class OrderContainer extends StatelessWidget {
           ),
         ],
       ),
-    );
+    )));
   }
 }

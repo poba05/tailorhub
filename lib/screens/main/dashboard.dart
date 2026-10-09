@@ -6,6 +6,7 @@ import 'package:tailorhub/models/clients.dart';
 import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/models/profile.dart';
 import 'package:tailorhub/screens/order/order_screen.dart';
+import 'package:tailorhub/screens/order/order_detail_screen.dart';
 import 'package:tailorhub/services/client_services.dart';
 import 'package:tailorhub/services/profile_service.dart';
 import 'package:tailorhub/utils/name_utils.dart';
@@ -362,7 +363,13 @@ class _DashboardState extends State<Dashboard> {
               children: orders.map((order) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: OrderContainer(order: order),
+                  child: OrderContainer(
+                    order: order,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => OrderDetailScreen(order: order)),
+                    ),
+                  ),
                 );
               }).toList(),
             ),
@@ -373,31 +380,40 @@ class _DashboardState extends State<Dashboard> {
 
   Row dashboardHeader(String todayDate) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                todayDate,
-                style: AppFonts.label(
-                  color: AppColor.grey.withValues(alpha: .5),
+          child: Container(
+            padding: const EdgeInsets.only(left: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  todayDate,
+                  style: AppFonts.label(
+                    color: AppColor.grey.withValues(alpha: .72),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              isLoading
-                  ? const SkeletonBox(height: 20, width: 160)
-                  : Text(
-                      "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
-                      style: AppFonts.heading(color: AppColor.text),
-                    ),
-              const SizedBox(height: 5),
-              Text(
-                "what are we sketching today?",
-                style: AppFonts.body(color: AppColor.grey),
-              ),
-            ],
+                const SizedBox(height: 10),
+                isLoading
+                    ? const SkeletonBox(height: 20, width: 160)
+                    : Text(
+                        "Welcome, ${_profile?.fullName.split(' ').first ?? 'Tailor'}",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontFamily: 'CormorantGaramond',
+                          fontVariations: [FontVariation('wght', 600)],
+                          color: AppColor.text,
+                          height: 1.1,
+                        ),
+                      ),
+                const SizedBox(height: 6),
+                Text(
+                  "what are we sketching today?",
+                  style: AppFonts.body(color: AppColor.grey),
+                ),
+              ],
+            ),
           ),
         ),
         GestureDetector(
@@ -406,17 +422,17 @@ class _DashboardState extends State<Dashboard> {
             height: 42,
             width: 42,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColor.plainWhite,
               shape: BoxShape.circle,
               border: Border.all(
                 width: 1,
-                color: AppColor.grey.withValues(alpha: .2),
+                color: AppColor.grey.withValues(alpha: .18),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColor.first.withValues(alpha: 0.08),
-                  blurRadius: 15,
-                  offset: const Offset(0, 6),
+                  color: AppColor.primary.withValues(alpha: 0.08),
+                  blurRadius: 14,
+                  offset: const Offset(0, 7),
                 ),
               ],
             ),
@@ -436,12 +452,19 @@ class _DashboardState extends State<Dashboard> {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 width: 2,
-                color: AppColor.primary.withValues(alpha: .28),
+                color: AppColor.primary.withValues(alpha: .22),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.primary.withValues(alpha: 0.12),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             child: Container(
-              height: 32,
-              width: 32,
+              height: 34,
+              width: 34,
               decoration: BoxDecoration(
                 gradient: AppGradient.primaryGradient,
                 borderRadius: BorderRadius.circular(12),
@@ -468,20 +491,20 @@ class _DashboardState extends State<Dashboard> {
           style: TextStyle(
             fontSize: 24,
             fontFamily: 'CormorantGaramond',
-            fontVariations: [FontVariation('wght', 500)],
+            fontVariations: [FontVariation('wght', 600)],
             color: AppColor.text,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 12),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: summaryDetails.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 1.5,
+            childAspectRatio: 1.48,
           ),
           itemBuilder: (context, index) {
             final items = summaryDetails[index];
@@ -510,62 +533,82 @@ class _DashboardState extends State<Dashboard> {
     required Color progressColor,
   }) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.grey.withValues(alpha: .15)),
-        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColor.grey.withValues(alpha: .12)),
+        borderRadius: BorderRadius.circular(22),
         color: AppColor.plainWhite,
         boxShadow: [
           BoxShadow(
-            color: AppColor.first.withValues(alpha: .05),
+            color: AppColor.primary.withValues(alpha: .05),
             blurRadius: 12,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         crossAxisAlignment: .start,
         children: [
-          Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'CormorantGaramond',
-                  fontVariations: [FontVariation('wght', 500)],
-                  color: AppColor.text,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontFamily: 'CormorantGaramond',
+                    fontVariations: [FontVariation('wght', 600)],
+                    color: AppColor.text,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'DMSANS',
-                  fontVariations: [FontVariation('wght', 700)],
-                  color: AppColor.text,
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'DMSANS',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: AppColor.text,
+                  ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                subtitle ?? '',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontFamily: 'DMSANS',
-                  fontVariations: [FontVariation('wght', 400)],
-                  color: AppColor.grey,
+                const SizedBox(height: 4),
+                Text(
+                  subtitle ?? '',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'DMSANS',
+                    fontVariations: [FontVariation('wght', 400)],
+                    color: AppColor.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Spacer(),
-          CircularProgressIndicator(
-            value: progress / 100,
-            strokeWidth: 4.0,
-            color: progressColor,
-            backgroundColor: AppColor.grey.withValues(alpha: .3),
+          const SizedBox(width: 10),
+          SizedBox(
+            height: 42,
+            width: 42,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: progress / 100,
+                  strokeWidth: 4.0,
+                  color: progressColor,
+                  backgroundColor: AppColor.grey.withValues(alpha: .18),
+                ),
+                Text(
+                  '${progress.toInt()}%',
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontFamily: 'DMSANS',
+                    fontVariations: [FontVariation('wght', 700)],
+                    color: AppColor.text,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

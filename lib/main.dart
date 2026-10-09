@@ -22,7 +22,7 @@ class Tailorhub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TailorHub',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -39,7 +39,20 @@ class Tailorhub extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF7A2B9F),
+          surface: const Color(0xFFF7F4FB),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF7F4FB),
+        appBarTheme: const AppBarTheme(
+          centerTitle: false,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
       ),
       home: OnboardingScreen(),
       debugShowCheckedModeBanner: false,

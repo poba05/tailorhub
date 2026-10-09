@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tailorhub/screens/client/client_screen.dart';
 import 'package:tailorhub/screens/main/dashboard.dart';
 import 'package:tailorhub/screens/order/order_screen.dart';
+import 'package:tailorhub/screens/profile/profile_screen.dart';
 import 'package:tailorhub/screens/template/template_screen.dart';
 import 'package:tailorhub/widgets/custom_nav_bar.dart';
 
@@ -20,13 +21,13 @@ class _MainScreenState extends State<MainScreen> {
     const ClientScreen(),
     const OrderScreen(),
     const TemplateScreen(),
-    const ClientScreen(),
+    const ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentIndex],
+      body: IndexedStack(index: currentIndex, children: pages),
 
       bottomNavigationBar: CustomNavBar(
         currentIndex: currentIndex,

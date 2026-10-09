@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tailorhub/constants/colors.dart';
 import 'package:tailorhub/constants/fonts.dart';
 import 'package:tailorhub/services/garmenttype_service.dart';
+import 'package:tailorhub/screens/template/template_editor_screen.dart';
 import 'package:tailorhub/widgets/create_btn_popup.dart';
 import 'package:tailorhub/widgets/custom_button.dart';
 import 'package:tailorhub/widgets/custombg.dart';
@@ -26,8 +27,8 @@ class _TemplateScreenState extends State<TemplateScreen> {
 
   @override
   void initState() {
-    loadGarmentTypes();
     super.initState();
+    loadGarmentTypes();
   }
 
   Future<void> loadGarmentTypes() async {
@@ -46,6 +47,7 @@ class _TemplateScreenState extends State<TemplateScreen> {
         isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         errorMessage = 'Failed to load garment types';
         isLoading = false;
@@ -124,11 +126,10 @@ class _TemplateScreenState extends State<TemplateScreen> {
     }
     if (garmentTypes.isEmpty) {
       return EmptyState(
-        title: "No Templates Found",
-        subTitle:
-            "You haven't created any templates yet. Tap the button below to create your first template.",
-        buttonText: "Reload",
-        onButtonPressed: loadGarmentTypes,
+        title: "Your template library starts here",
+        subTitle: "Save a garment and its measurement fields so you can start future orders faster.",
+        buttonText: "Create Template",
+        onButtonPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TemplateEditorScreen())),
       );
     }
     return GridView.builder(
@@ -172,12 +173,19 @@ class _TemplateScreenState extends State<TemplateScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Templates", style: AppFonts.heading(color: AppColor.text)),
-          const SizedBox(height: 4),
-          Text(
-            "Measurements sets you can drop into any order",
-            style: AppFonts.body(color: AppColor.grey),
-          ),
+          Row(children: [
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text("Templates", style: AppFonts.heading(color: AppColor.text)),
+              const SizedBox(height: 4),
+              Text("Measurement sets for your next order", style: AppFonts.body(color: AppColor.grey)),
+            ])),
+            IconButton.filled(
+              tooltip: 'Create template',
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TemplateEditorScreen())),
+              style: IconButton.styleFrom(backgroundColor: AppColor.first, foregroundColor: Colors.white),
+              icon: const Icon(Icons.add_rounded),
+            ),
+          ]),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
