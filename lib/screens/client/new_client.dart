@@ -283,10 +283,10 @@ class _NewClientState extends State<NewClient> {
             alignment: Alignment.center,
             child: Text(
               getInitials(name.isEmpty ? '__' : name),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'DMSANS',
-                fontVariations: [FontVariation('wght', 700)],
+                fontVariations: const [FontVariation('wght', 700)],
                 color: AppColor.plainWhite,
               ),
             ),

@@ -149,8 +149,7 @@ flutter_native_splash:
   # general background_image for all platform (except android 12+)
   # if you specify this [required] background_image, then you should comment the 
   # [required] color in previous section. select one, they cant work together.
-  color: "#160B24"
-  image: "lib/assets/images/hero_icon.png"
+  background_image: "lib/assets/images/splash_background.png"
   #background_image_dark: "assets/dark-background.png"
   # platform-specific background_image. will override general background_image if active:
   #background_image_android:      "assets/background-android.png"
@@ -237,17 +236,17 @@ flutter_native_splash:
   #! ANDROID 12+ configuration:
   android_12:
     # background color
-    color: "#160B24"
+    color: "#35134F"
     # color_dark: "#042a49"
 
     # Android 12+ only supports a centered icon for the splash image.
     # Use the same splash asset here if you want the native splash to show
     # your custom art instead of the default icon.
-    image: lib/assets/images/hero_icon.png
+    image: lib/assets/images/splash_mark.png
     # image_dark: lib/assets/images/splash_background.png
 
     # icon background color
-    icon_background_color: "#26133A"
+    icon_background_color: "#40145C"
     # icon_background_color_dark: "#eeeeee"
 
     fullscreen: true

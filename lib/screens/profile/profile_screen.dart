@@ -289,11 +289,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String title,
     String subtitle,
     VoidCallback? onTap,
-  ) => Row(
-    children: [
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
+  ) => GestureDetector(
+    onTap: onTap,
+    child: Row(
+      children: [
+        Container(
           width: 42,
           height: 42,
           decoration: BoxDecoration(
@@ -302,19 +302,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Icon(icon, color: AppColor.first),
         ),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: AppFonts.bodyLarge(color: AppColor.text)),
-            Text(subtitle, style: AppFonts.body(color: AppColor.grey)),
-          ],
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppFonts.bodyLarge(color: AppColor.text)),
+              Text(subtitle, style: AppFonts.body(color: AppColor.grey)),
+            ],
+          ),
         ),
-      ),
-      Icon(Icons.chevron_right_rounded, color: AppColor.grey),
-    ],
+        Icon(Icons.chevron_right_rounded, color: AppColor.grey),
+      ],
+    ),
   );
 
   Widget _menuCard(BuildContext context) => Container(

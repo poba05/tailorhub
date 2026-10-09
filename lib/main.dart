@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tailorhub/screens/onboarding/onboarding_screen.dart';
+import 'package:tailorhub/screens/splash/splash_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -54,7 +54,7 @@ class Tailorhub extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
       ),
-      home: OnboardingScreen(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

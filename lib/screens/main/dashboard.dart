@@ -7,6 +7,7 @@ import 'package:tailorhub/models/order.dart';
 import 'package:tailorhub/models/profile.dart';
 import 'package:tailorhub/screens/order/order_screen.dart';
 import 'package:tailorhub/screens/order/order_detail_screen.dart';
+import 'package:tailorhub/screens/profile/profile_screen.dart';
 import 'package:tailorhub/services/client_services.dart';
 import 'package:tailorhub/services/profile_service.dart';
 import 'package:tailorhub/utils/name_utils.dart';
@@ -367,7 +368,9 @@ class _DashboardState extends State<Dashboard> {
                     order: order,
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => OrderDetailScreen(order: order)),
+                      MaterialPageRoute(
+                        builder: (_) => OrderDetailScreen(order: order),
+                      ),
                     ),
                   ),
                 );
@@ -445,7 +448,34 @@ class _DashboardState extends State<Dashboard> {
         ),
         const SizedBox(width: 10),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const ProfileScreen();
+                },
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      final slide =
+                          Tween<Offset>(
+                            begin: const Offset(0, 0.08),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutCubic,
+                            ),
+                          );
+
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(position: slide, child: child),
+                      );
+                    },
+              ),
+            );
+          },
           child: Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
